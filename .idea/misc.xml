@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/book" />
+    <file type="web" url="file://$PROJECT_DIR$/category" />
+    <file type="web" url="file://$PROJECT_DIR$/configServer" />
+    <file type="web" url="file://$PROJECT_DIR$/eurokaServer" />
+    <file type="web" url="file://$PROJECT_DIR$/gateway" />
+    <file type="web" url="file://$PROJECT_DIR$/user" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="17" project-jdk-type="JavaSDK" />
+</project>

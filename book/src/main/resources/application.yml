@@ -1,0 +1,12 @@
+spring:
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+  application:
+    name: book-service
+  profiles:
+    active: dev
