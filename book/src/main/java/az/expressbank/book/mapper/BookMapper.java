@@ -7,4 +7,5 @@ import org.modelmapper.ModelMapper;
 @Mapper(componentModel = "spring")
 public interface BookMapper {
     Book DTOToEntity(BookDTO bookDTO);
+    BookDTO entityToDTO(Book book);
 }

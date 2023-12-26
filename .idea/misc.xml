@@ -7,6 +7,7 @@
     <file type="web" url="file://$PROJECT_DIR$/configServer" />
     <file type="web" url="file://$PROJECT_DIR$/eurokaServer" />
     <file type="web" url="file://$PROJECT_DIR$/gateway" />
+    <file type="web" url="file://$PROJECT_DIR$/security" />
     <file type="web" url="file://$PROJECT_DIR$/user" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="17" project-jdk-type="JavaSDK" />

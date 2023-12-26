@@ -68,7 +68,7 @@ public class BookServiceImpl implements BookService {
 
         List<BookDTO> dtos = new ArrayList<>();
         for (int i = 0; i < books.size(); i++) {
-            BookDTO dto = new BookDTO(books.get(i));
+            BookDTO dto = bookMapper.entityToDTO(books.get(i));
             dto.setCategoryDTO(categoryDTOS.get(i));
             dtos.add(dto);
         }
@@ -84,7 +84,7 @@ public class BookServiceImpl implements BookService {
         BookDTO dto;
         try {
             book = bookRepository.getReferenceById(id);
-            dto = new BookDTO(book);
+            dto = bookMapper.entityToDTO(book);
         } catch (EntityNotFoundException ex) {
             log.error("Entity not found with id {}", id+"  "+ ex);
             throw new NotFoundException("Entity not found with id " + id);

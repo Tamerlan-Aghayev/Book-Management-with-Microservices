@@ -12,8 +12,5 @@ public class BookDTO {
     private String name;
     private String author;
     private CategoryDTO categoryDTO;
-    public BookDTO(Book book){
-        this.author=book.getAuthor();
-        this.name=book.getName();
-    }
+
 }

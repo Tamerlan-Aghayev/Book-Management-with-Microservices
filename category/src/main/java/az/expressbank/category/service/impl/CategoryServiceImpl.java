@@ -32,7 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories= categoryRepository.findAll();
         List<CategoryDTO> dtos=new ArrayList<>();
         for (Category category:categories){
-            dtos.add(new CategoryDTO(category));
+            dtos.add(categoryMapper.entityToDTO(category));
         }
         log.trace("Categories: {}" , dtos);
         log.info("Successfully fetched all categories");
@@ -44,7 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         List<Category> categories= categoryRepository.getCategoryById(Long.valueOf(id));
         if(categories.size()==1) {
-            CategoryDTO dto=new CategoryDTO(categoryRepository.getCategoryById(Long.valueOf(id)).get(0));
+            CategoryDTO dto=categoryMapper.entityToDTO(categoryRepository.getCategoryById(Long.valueOf(id)).get(0));
             log.trace("Category: {}" ,dto);
 
             log.info("Successfully fetched category by ID: {}", id);
@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         List<Category> categories = categoryRepository.findAllById(ids);
         List<CategoryDTO> dtos = categories.stream()
-                .map(CategoryDTO::new)
+                .map(i->categoryMapper.entityToDTO(i))
                 .collect(Collectors.toList());
         log.trace("Categories: {}" , dtos);
 

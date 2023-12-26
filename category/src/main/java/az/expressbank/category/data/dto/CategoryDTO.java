@@ -10,7 +10,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategoryDTO {
     private String name;
-    public CategoryDTO(Category category){
-        this.name=category.getName();
-    }
 }
