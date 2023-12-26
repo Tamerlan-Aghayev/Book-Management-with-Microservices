@@ -1,4 +1,4 @@
-package az.expressbank.category.service;
+package az.expressbank.category.service.impl;
 
 import az.expressbank.category.data.dto.CategoryDTO;
 import az.expressbank.category.data.entity.Category;
@@ -6,6 +6,7 @@ import az.expressbank.category.data.repository.CategoryRepository;
 import az.expressbank.category.exception.EntityParsingException;
 import az.expressbank.category.exception.NotFoundException;
 import az.expressbank.category.mapper.CategoryMapper;
+import az.expressbank.category.service.CategoryService;
 import ch.qos.logback.core.spi.LifeCycle;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     public List<CategoryDTO> getAll(){
         log.info("Fetching all categories");
@@ -84,7 +86,7 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("Adding a new category");
 
         try {
-            Category category = CategoryMapper.convertToEntity(categoryDTO);
+            Category category = categoryMapper.DTOToEntity(categoryDTO);
             Long id=categoryRepository.saveAndFlush(category).getId();
             log.info("Successfully added a new category with id {}", id);
 

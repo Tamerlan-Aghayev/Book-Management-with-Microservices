@@ -1,7 +1,7 @@
 package az.expressbank.book.controller;
 
 import az.expressbank.book.data.dto.BookDTO;
-import az.expressbank.book.service.BookServiceImpl;
+import az.expressbank.book.service.impl.BookServiceImpl;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;

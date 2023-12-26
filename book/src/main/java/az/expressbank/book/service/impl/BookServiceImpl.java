@@ -1,4 +1,4 @@
-package az.expressbank.book.service;
+package az.expressbank.book.service.impl;
 
 import az.expressbank.book.client.CategoryClient;
 import az.expressbank.book.data.dto.BookDTO;
@@ -8,6 +8,7 @@ import az.expressbank.book.data.repository.BookRepository;
 import az.expressbank.book.exception.DTOParsingException;
 import az.expressbank.book.exception.NotFoundException;
 import az.expressbank.book.mapper.BookMapper;
+import az.expressbank.book.service.BookService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -28,7 +29,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class BookServiceImpl {
+public class BookServiceImpl implements BookService {
+    private final BookMapper bookMapper;
     private static final ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
@@ -130,7 +132,7 @@ public class BookServiceImpl {
         logTraceResponse(jsonData);
         Long id = Long.parseLong(jsonData);
 
-        Book book = BookMapper.mapDtoToEntity(bookDTO);
+        Book book = bookMapper.DTOToEntity(bookDTO);
         book.setCategoryId(id);
         Long bookId = bookRepository.saveAndFlush(book).getId();
         log.info("Successfully added a new book with ID {}", bookId);
