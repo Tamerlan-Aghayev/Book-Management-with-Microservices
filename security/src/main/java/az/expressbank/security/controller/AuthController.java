@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ServerWebExchange;
 
 import java.util.List;
 
@@ -43,9 +44,9 @@ public class AuthController {
         service.validateToken(token);
         return ResponseEntity.ok("Valid");
     }
-    @GetMapping("/extract")
-    public List<String> extract(@RequestParam("token") String token) {
+    @PostMapping("/check-token")
+    public ResponseEntity<Boolean> checkToken(@RequestParam("header")String header, @RequestParam("url") String url) {
 
-        return service.extractToken(token);
+        return ResponseEntity.ok(service.checkToken(header, url));
     }
 }

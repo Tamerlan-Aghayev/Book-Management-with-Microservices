@@ -1,6 +1,7 @@
 package az.express.gateway.filter;
 
 import az.express.gateway.client.SecurityClient;
+import feign.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -26,11 +27,6 @@ public class AuthenticationFilter implements GatewayFilter {
 
 
 
-    private boolean hasUserRole(List<String> roles, String targetRole) {
-
-        return roles.contains(targetRole);
-    }
-
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         if (routeValidator.isSecured.test(exchange.getRequest())) {
@@ -38,28 +34,15 @@ public class AuthenticationFilter implements GatewayFilter {
                 throw new RuntimeException("Missing authorization header");
             }
 
-            String authHeader = Objects.requireNonNull(exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION)).get(0);
+            Response response = securityClient.checkToken((exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION)).get(0),
+                    exchange.getRequest().getURI().getPath()
+            );
 
-            if (authHeader != null && authHeader.startsWith("Bearer")) {
-                String token = authHeader.substring(7);
-                List<String> roles = securityClient.extract(token);
 
-                try {
-                    if (exchange.getRequest().getURI().getPath().startsWith("/book/") && hasUserRole(roles, "ROLE_USER")) {
-                        return chain.filter(exchange);  // Allow access for users to /book/**
-                    } else if (exchange.getRequest().getURI().getPath().startsWith("/category/") && hasUserRole(roles, "ROLE_ADMIN")) {
-                        return chain.filter(exchange);  // Allow access for admins to /category/**
-                    } else {
-                        throw new RuntimeException("Unauthorized access to the requested path");
-                    }
-                } catch (Exception e) {
-                    System.out.println("Invalid access...!");
-                    e.printStackTrace();
-                }
-            }
+            System.out.println(response.status());
+            if(response.status()!=200) throw new RuntimeException("error occurred my guy over there");
         }
-
         return chain.filter(exchange);
-    }
 
+    }
 }

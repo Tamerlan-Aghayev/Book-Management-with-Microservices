@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerWebExchange;
 
 import java.util.List;
 import java.util.Set;
@@ -32,7 +33,7 @@ public class AuthService {
     public void validateToken(String token) {
         jwtService.validateToken(token);
     }
-    public List<String> extractToken(String token) {
-        return jwtService.extractRoles(token);
+    public boolean checkToken(String header, String url) {
+        return jwtService.checkToken(header, url);
     }
 }

@@ -6,8 +6,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
 
 import java.security.Key;
 import java.time.LocalDate;
@@ -46,6 +48,7 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
     public List<String> extractRoles(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
@@ -58,5 +61,34 @@ public class JwtService {
         return authorities.stream()
                 .map(authorityMap -> authorityMap.get("authority"))
                 .collect(Collectors.toList());
+    }
+
+    public boolean checkToken(String authHeader, String url) {
+        System.out.println(authHeader);
+        System.out.println(url);
+
+        if (authHeader != null && authHeader.startsWith("Bearer")) {
+            String token = authHeader.substring(7);
+            List<String> roles = extractRoles(token);
+
+            try {
+                System.out.println("in try");
+                if (url.startsWith("/book/") && hasUserRole(roles, "ROLE_USER")) {
+                    return true;
+                } else if (url.startsWith("/category/") && hasUserRole(roles, "ROLE_ADMIN")) {
+                    return true;
+                } else {
+                    throw new RuntimeException("Unauthorized access to the requested path");
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid access...!");
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+    private boolean hasUserRole(List<String> roles, String targetRole) {
+
+        return roles.contains(targetRole);
     }
 }

@@ -40,7 +40,7 @@ public class AuthConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/register", "/auth/token", "/auth/validate", "/auth/extract").permitAll()
+                        .requestMatchers("/auth/register", "/auth/token", "/auth/validate", "/auth/check-token").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();
