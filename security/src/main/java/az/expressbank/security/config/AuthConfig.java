@@ -40,8 +40,7 @@ public class AuthConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/register", "/auth/token", "/auth/validate").permitAll()
-                        .requestMatchers("/book/books").hasRole("ADMIN")
+                        .requestMatchers("/auth/register", "/auth/token", "/auth/validate", "/auth/extract").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();

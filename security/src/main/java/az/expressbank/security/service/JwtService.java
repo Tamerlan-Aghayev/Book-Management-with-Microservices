@@ -1,6 +1,7 @@
 package az.expressbank.security.service;
 
 import az.expressbank.security.data.enums.Role;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtService {
@@ -43,5 +45,18 @@ public class JwtService {
     private Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+    public List<String> extractRoles(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        List<Map<String, String>> authorities = claims.get("roles", List.class);
+
+        return authorities.stream()
+                .map(authorityMap -> authorityMap.get("authority"))
+                .collect(Collectors.toList());
     }
 }

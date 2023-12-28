@@ -32,4 +32,7 @@ public class AuthService {
     public void validateToken(String token) {
         jwtService.validateToken(token);
     }
+    public List<String> extractToken(String token) {
+        return jwtService.extractRoles(token);
+    }
 }

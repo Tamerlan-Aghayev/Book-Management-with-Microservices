@@ -133,6 +133,8 @@ public class BookServiceImpl implements BookService {
         Long id = Long.parseLong(jsonData);
 
         Book book = bookMapper.DTOToEntity(bookDTO);
+        System.out.println(bookDTO.getName());
+
         book.setCategoryId(id);
         Long bookId = bookRepository.saveAndFlush(book).getId();
         log.info("Successfully added a new book with ID {}", bookId);

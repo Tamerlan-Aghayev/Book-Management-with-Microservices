@@ -43,4 +43,9 @@ public class AuthController {
         service.validateToken(token);
         return ResponseEntity.ok("Valid");
     }
+    @GetMapping("/extract")
+    public List<String> extract(@RequestParam("token") String token) {
+
+        return service.extractToken(token);
+    }
 }
