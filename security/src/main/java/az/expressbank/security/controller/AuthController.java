@@ -5,6 +5,7 @@ import az.expressbank.security.data.entity.UserCredentials;
 import az.expressbank.security.mapper.UserCredentialsMapper;
 import az.expressbank.security.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,18 +29,18 @@ public class AuthController {
     }
 
     @PostMapping("/token")
-    public String getToken(@RequestParam("username") String username, @RequestParam("password") String password) {
+    public ResponseEntity<String> getToken(@RequestParam("username") String username, @RequestParam("password") String password) {
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         if (authenticate.isAuthenticated()) {
-            return service.generateToken(username, (List<GrantedAuthority>) authenticate.getAuthorities());
+            return ResponseEntity.ok(service.generateToken(username, (List<GrantedAuthority>) authenticate.getAuthorities()));
         } else {
             throw new RuntimeException("invalid access");
         }
     }
 
     @GetMapping("/validate")
-    public String validateToken(@RequestParam("token") String token) {
+    public ResponseEntity<String> validateToken(@RequestParam("token") String token) {
         service.validateToken(token);
-        return "Token is valid";
+        return ResponseEntity.ok("Valid");
     }
 }

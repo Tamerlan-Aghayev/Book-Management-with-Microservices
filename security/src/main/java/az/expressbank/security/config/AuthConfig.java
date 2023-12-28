@@ -41,7 +41,7 @@ public class AuthConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/register", "/auth/token", "/auth/validate").permitAll()
-                        .requestMatchers("/book/books").hasRole("USER")
+                        .requestMatchers("/book/books").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .build();

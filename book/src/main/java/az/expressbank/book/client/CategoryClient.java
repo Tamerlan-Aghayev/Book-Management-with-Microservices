@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name="CategoryClient", url="http://localhost:8084")
+@FeignClient(name="CategoryClient", url="http://localhost:8084/category")
 public interface CategoryClient {
     @GetMapping("/category/{id}")
     Response getCategoryById(@PathVariable("id") Long id);
