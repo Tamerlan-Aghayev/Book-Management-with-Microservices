@@ -9,6 +9,7 @@ import az.expressbank.book.exception.DTOParsingException;
 import az.expressbank.book.exception.NotFoundException;
 import az.expressbank.book.mapper.BookMapper;
 import az.expressbank.book.service.BookService;
+import az.expressbank.book.util.BookConverter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -31,9 +32,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
-    private static final ObjectMapper objectMapper = new ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
+
     private final CategoryClient categoryClient;
     private final BookRepository bookRepository;
 
@@ -51,20 +50,8 @@ public class BookServiceImpl implements BookService {
             throw new Exception();
         }
 
-        String jsonData;
-        try (var inputStream = response.body().asInputStream()) {
-            jsonData = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-        }
 
-        logTraceResponse(jsonData);
-
-        List<CategoryDTO> categoryDTOS;
-        try {
-            categoryDTOS = objectMapper.readValue(jsonData, new TypeReference<List<CategoryDTO>>() {
-            });
-        }catch (Exception ex) {
-            throw new DTOParsingException("Exception occurred when parsing JSON to DTO");
-        }
+        List<CategoryDTO> categoryDTOS= BookConverter.getCategoryListFromResponse(response);
 
         List<BookDTO> dtos = new ArrayList<>();
         for (int i = 0; i < books.size(); i++) {
@@ -98,14 +85,7 @@ public class BookServiceImpl implements BookService {
             throw new Exception();
         }
 
-        String jsonData;
-        try (var inputStream = response.body().asInputStream()) {
-            jsonData = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-        }
-        logTraceResponse(jsonData);
-        CategoryDTO categoryDTO;
-        categoryDTO = objectMapper.readValue(jsonData, CategoryDTO.class);
-
+        CategoryDTO categoryDTO=BookConverter.getCategoryFromResponse(response);
         dto.setCategoryDTO(categoryDTO);
         log.info("Successfully fetched book by ID: {}", id);
         log.trace("CategoryDTO: "+categoryDTO);
@@ -125,13 +105,7 @@ public class BookServiceImpl implements BookService {
             throw new Exception();
         }
 
-        String jsonData;
-        try (var inputStream = response.body().asInputStream()) {
-            jsonData = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-        }
-        logTraceResponse(jsonData);
-        Long id = Long.parseLong(jsonData);
-
+        Long id=BookConverter.getIdOfCategory(response);
         Book book = bookMapper.DTOToEntity(bookDTO);
         System.out.println(bookDTO.getName());
 
@@ -142,7 +116,4 @@ public class BookServiceImpl implements BookService {
         return bookId;
     }
 
-    private void logTraceResponse(String jsonData) {
-        log.trace("FeignClient Response: {}", jsonData);
-    }
 }
